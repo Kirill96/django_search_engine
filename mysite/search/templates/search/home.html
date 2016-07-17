@@ -1,0 +1,103 @@
+{% load staticfiles %}
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+        <!-- Latest compiled and minified CSS -->
+        <link rel="shortcut icon" href="/static/css/favicon.ico" type="image/x-icon">
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+
+        <!-- Optional theme -->
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap-theme.min.css" integrity="sha384-fLW2N01lMqjakBkx3l/M9EahuwpSfeNvV63J5ezn3uZzapT0u7EYsXMjQV+0En5r" crossorigin="anonymous">
+
+        <!-- Latest compiled and minified JavaScript -->
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
+        <link href="{% static 'css/css/bootstrap.min.css' %}" rel="stylesheet">
+        <title>A&amp;K Search</title>
+
+        <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+        <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+        <!--[if lt IE 9]>
+          <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+          <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+        <![endif]-->
+    </head>
+    <body>
+        <nav class="navbar navbar-default">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-lg-3"> <p><font size="6" face="cursive"> <font color="red"> A&amp;K </font> Search </font></p></div>
+                    <div class="col-lg-9">
+                        <ul class="nav navbar-nav">                    
+                            <li class="btn-danger">
+                                <a href="home.html" style="color: rgb(200, 250, 250);"><span class="glyphicon glyphicon-home" style="margin-right: 10px;"></span>Home </a>
+                            </li>
+                            <li>
+                                <a href="indexURL.html"> Index URL </a>
+                            </li>
+                            <li>
+                                <a href="knownURL.html"> Known URL </a>
+                            </li>
+                            <li>
+                                <a href="stateAndEdit.html"> Index </a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </nav>
+
+        <div class="container">
+            <div class="raw">
+                <div class="col-lg-2"></div>
+                <form method="post" action="/">
+                    <div class="col-lg-7">
+                        <input name="query" type="text" class="form-control" placeholder="Search" value="{{ query }}">
+                    </div>
+                    <button type="submit" class="btn btn-success col-lg-1">
+                        <span class="glyphicon glyphicon-search" style="margin-right: 5px;"></span>Search
+                    </button>
+                    
+                    {% csrf_token %}
+                </form>
+                <div class="col-lg-2"></div>
+            </div>
+        </div>
+
+        <!--for results-->
+        <div class="container" style="height: 200px; margin-top: 20px;">
+            {% for link_ in link %}
+            <div class="row result-row">
+                <div class="media-body">
+                    <h4 class="media-heading"><a href="{{ link_.url }}" target="_blank">{{ link_.title }}</a></h4>
+                    {{ link_.text_of_url|truncatewords:40 }}...
+                </div>
+            </div>
+            {% endfor %}
+            <div class="pagination">
+                <span class="step-links">
+                    {% if link.has_previous %}
+                        <a href="?query={{ query }}&page={{ link.previous_page_number }}">Previous</a>
+                    {% endif %}
+                    
+                    {% if link.has_previous or link.has_next %}
+                    <span class="current">
+                        Page {{ link.number }} of {{ link.paginator.num_pages }}.
+                    </span>
+                    {% endif %}
+                    
+                    {% if link.has_next %}
+                        <a href="?query={{ query }}&page={{ link.next_page_number }}">Next</a>
+                    {% endif %}
+                </span>
+            </div>
+
+        <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+        <!-- Include all compiled plugins (below), or include individual files as needed -->
+        <script src="/static/css/js/bootstrap.min.js"></script>
+    </body>
+</html>
